@@ -70,7 +70,14 @@ def tools_dir():
 
 
 def find(name):
+<<<<<<< HEAD
     """Path of a tool: user folder (self-updated yt-dlp), then the bundled copy, then PATH."""
+=======
+    """Path of a tool: user folder (self-updated yt-dlp / prepared copies), then the bundled copy, then PATH."""
+    user = os.path.join(tools_dir(), name + EXE)
+    if not os.path.exists(user) and IS_MAC and os.path.exists(os.path.join(bundled_dir(), name + EXE)):
+        prepare_one(name)               # macOS: run a prepared copy, not the quarantined one in the app
+>>>>>>> bbc1fda (v1.4.2 fix mac version)
     for d in (tools_dir(), bundled_dir()):
         p = os.path.join(d, name + EXE)
         if os.path.exists(p):
@@ -78,6 +85,22 @@ def find(name):
     return shutil.which(name)
 
 
+<<<<<<< HEAD
+=======
+def prepare_one(name):
+    src = os.path.join(bundled_dir(), name + EXE)
+    dst = os.path.join(tools_dir(), name + EXE)
+    try:
+        tmp = dst + ".copying"
+        shutil.copy2(src, tmp)
+        os.replace(tmp, dst)
+        make_executable(dst)
+        clear_quarantine(dst)
+    except OSError:
+        pass
+
+
+>>>>>>> bbc1fda (v1.4.2 fix mac version)
 def missing():
     return [n for n in ("yt-dlp", "ffmpeg", "deno") if not find(n)]
 
@@ -123,6 +146,7 @@ def install_file(downloaded_path, members, dest_dir, plain_name=None):
 _update_lock = threading.Lock()
 
 
+<<<<<<< HEAD
 def prepare():
     """At startup: copy the bundled yt-dlp to the user folder (Program Files is read-only,
     and yt-dlp must be able to update itself), then update it in the background."""
@@ -134,6 +158,40 @@ def prepare():
             make_executable(dst)
     except OSError:
         pass
+=======
+def clear_quarantine(path):
+    """macOS: remove the 'downloaded from the internet' flag from one of Sahm's own helper programs.
+    Without this, Gatekeeper shows '"yt-dlp" Not Opened' even though the user already allowed Sahm."""
+    if not IS_MAC:
+        return
+    try:
+        subprocess.run(["/usr/bin/xattr", "-d", "com.apple.quarantine", path],
+                       capture_output=True, timeout=10)
+    except Exception:  # noqa
+        pass
+
+
+def prepare():
+    """At startup: copy the bundled helper programs to the user's Sahm folder and get them ready.
+    - yt-dlp (all systems): the install folder is read-only, and yt-dlp must be able to update itself.
+    - macOS: also ffmpeg / ffprobe / deno, and clear their quarantine flag, because macOS blocks
+      quarantined helper programs inside an app that isn't notarized by Apple.
+    A newer copy in the user folder (e.g. a self-updated yt-dlp) is never replaced by an older bundled one."""
+    names = ["yt-dlp"] + (["ffmpeg", "ffprobe", "deno"] if IS_MAC else [])
+    for name in names:
+        src = os.path.join(bundled_dir(), name + EXE)
+        dst = os.path.join(tools_dir(), name + EXE)
+        try:
+            if os.path.exists(src) and (not os.path.exists(dst) or os.path.getmtime(src) > os.path.getmtime(dst)):
+                tmp = dst + ".copying"
+                shutil.copy2(src, tmp)
+                os.replace(tmp, dst)
+                make_executable(dst)
+        except OSError:
+            continue
+        if os.path.exists(dst):
+            clear_quarantine(dst)       # also covers copies made by older versions of Sahm
+>>>>>>> bbc1fda (v1.4.2 fix mac version)
     update_ytdlp_in_background()
 
 

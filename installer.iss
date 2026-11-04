@@ -7,7 +7,11 @@
 #ifndef ChromeId
   #define ChromeId ""
 #endif
+<<<<<<< HEAD
 #define AppVersion "1.4.1"
+=======
+#define AppVersion "1.4.2"
+>>>>>>> bbc1fda (v1.4.2 fix mac version)
 
 [Setup]
 AppId={{6B2D3C1E-5A8F-4D7B-9E21-5A1C9F0D7E4A}
