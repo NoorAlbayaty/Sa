@@ -5,11 +5,7 @@ Windows:
   dist\\Sahm-Portable.zip    no-install version
   dist\\Sahm-Setup.exe       installer (needs Inno Setup 6)
 macOS (build on the kind of Mac you target - Apple Silicon or Intel):
-<<<<<<< HEAD
-  dist/Sahm.app             the app, video tools inside Sahm.app/Contents/MacOS/tools
-=======
   dist/Sahm.app             the app, video tools inside Sahm.app/Contents/Helpers
->>>>>>> bbc1fda (v1.4.2 fix mac version)
   dist/Sahm-macOS-AppleSilicon.dmg  or  dist/Sahm-macOS-Intel.dmg
 """
 import os
