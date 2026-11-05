@@ -6,11 +6,7 @@ import uuid
 import threading
 
 APP_NAME = "Sahm"
-<<<<<<< HEAD
-APP_VERSION = "1.4.1"
-=======
 APP_VERSION = "1.4.2"
->>>>>>> bbc1fda (v1.4.2 fix mac version)
 SERVER_PORT = 9614
 
 

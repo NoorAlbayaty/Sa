@@ -70,14 +70,10 @@ def tools_dir():
 
 
 def find(name):
-<<<<<<< HEAD
-    """Path of a tool: user folder (self-updated yt-dlp), then the bundled copy, then PATH."""
-=======
     """Path of a tool: user folder (self-updated yt-dlp / prepared copies), then the bundled copy, then PATH."""
     user = os.path.join(tools_dir(), name + EXE)
     if not os.path.exists(user) and IS_MAC and os.path.exists(os.path.join(bundled_dir(), name + EXE)):
         prepare_one(name)               # macOS: run a prepared copy, not the quarantined one in the app
->>>>>>> bbc1fda (v1.4.2 fix mac version)
     for d in (tools_dir(), bundled_dir()):
         p = os.path.join(d, name + EXE)
         if os.path.exists(p):
@@ -85,8 +81,6 @@ def find(name):
     return shutil.which(name)
 
 
-<<<<<<< HEAD
-=======
 def prepare_one(name):
     src = os.path.join(bundled_dir(), name + EXE)
     dst = os.path.join(tools_dir(), name + EXE)
@@ -100,7 +94,6 @@ def prepare_one(name):
         pass
 
 
->>>>>>> bbc1fda (v1.4.2 fix mac version)
 def missing():
     return [n for n in ("yt-dlp", "ffmpeg", "deno") if not find(n)]
 
@@ -146,19 +139,6 @@ def install_file(downloaded_path, members, dest_dir, plain_name=None):
 _update_lock = threading.Lock()
 
 
-<<<<<<< HEAD
-def prepare():
-    """At startup: copy the bundled yt-dlp to the user folder (Program Files is read-only,
-    and yt-dlp must be able to update itself), then update it in the background."""
-    src = os.path.join(bundled_dir(), "yt-dlp" + EXE)
-    dst = os.path.join(tools_dir(), "yt-dlp" + EXE)
-    try:
-        if os.path.exists(src) and (not os.path.exists(dst) or os.path.getmtime(src) > os.path.getmtime(dst)):
-            shutil.copy2(src, dst)
-            make_executable(dst)
-    except OSError:
-        pass
-=======
 def clear_quarantine(path):
     """macOS: remove the 'downloaded from the internet' flag from one of Sahm's own helper programs.
     Without this, Gatekeeper shows '"yt-dlp" Not Opened' even though the user already allowed Sahm."""
@@ -191,7 +171,6 @@ def prepare():
             continue
         if os.path.exists(dst):
             clear_quarantine(dst)       # also covers copies made by older versions of Sahm
->>>>>>> bbc1fda (v1.4.2 fix mac version)
     update_ytdlp_in_background()
 
 
